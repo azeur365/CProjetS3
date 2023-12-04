@@ -8,4 +8,4 @@ headers=$(find . -name "*.h")
 sources=$(find . -name "*.c" -not -name "main.c")
 
 # Compile main.c with gcc and include all the header and source files
-gcc -w -o Build/main $headers $sources main.c
+gcc -w -o Build/main $headers $sources main.c -lm

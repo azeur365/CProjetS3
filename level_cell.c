@@ -1,4 +1,4 @@
-#include "cell.h"
+#include "level_cell.h"
 #include <stdlib.h>
 
 t_d_cell* create_cell(int value, int level) {
