@@ -67,12 +67,12 @@ void search_list(t_d_list *list, int value) {
     for (int i = list->max_level - 1; i >= 0; i--) {
         current = around;
         if (list->head[i]->value <= value){
-            while (current->next[i] != NULL && current->value <= value) {
+            while (around->next[i] != NULL && around->value <= value) {
                 if (around->value == value) {
                     return;
                 }
                 current = around;
-                current = current->next[i];
+                around = around->next[i];
             }
         }
         else {
