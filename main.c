@@ -1,86 +1,49 @@
+#include "cell.h"
+#include "list.h"
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
-#include "level_list.h"
+#include "timer.h"
 
-// il reste . Provide the calculation times for inserting a new contact: see point 2) below.
-//2) Trace the complexity of the application:
-//As with the level list containing integers, you need to produce a graph comparing execution times
-//between:
-//i) Search/insertion operations carried out on level 0 only
-//ii) These same operations carried out from the highest level
-//During the presentation/demonstration, you will be asked to perform this part live.
-// La fonction search que j'ai faites elle start par le niveau le plus haut donc faut faire celle qui commence par le plus bas
-// et faut faire le truc pour la complexité avec le graphe
+//ex
 
 int main() {
-
-    t_d_list *list =  create_list(4);
-    int choice;
-    do {
-        printf("\nMenu:\n");
-        printf("1. Create Contact\n");
-        printf("2. Search Contact\n");
-        printf("3. Add Appointment\n");
-        printf("4. Delete Appointment\n");
-        printf("5. Display Appointments\n");
-        printf("6. Exit\n");
-        printf("Enter your choice: ");
-        scanf("%d", &choice);
-        getchar();
-
-        switch (choice) {
-            case 1:
-                printf("Enter the contact details:\n");
-                int* a = (int*)malloc(sizeof(int));
-                *a = 1;
-                printf("Enter the First name");
-                char *fname = scanString();
-                printf("%s",fname);
-                printf("Enter the Last Name");
-                char *lname = scanString();
-                printf("%s",lname);
-                Contact newContact = { .surname = lname, .firstName = fname };
-                t_d_cells *cell = create_cells(&newContact,a);
-                insert_cell_sorted(list,cell);
-                adjustLevels(list);
-                reset_list(list);
-                break;
-            case 2:
-                printf("Enter the contact that you search:\n");
-                char *name = scanString();
-                search_list(list,name);
-                break;
-            case 3: // Elle marche mais faut faire en sorte qu'elle propose le contact parce que la je lui fait pour la tete
-                printf("Enter the purpose of the appointment:\n");
-                char *purpose = scanString();
-                printf("Enter the day of the appointment:\n");
-                int day,month,year,durationMin,durationHour,startHour,startMin;
-                scanf("%d",&day);
-                printf("Enter the month of the appointment:\n");
-                scanf("%d",&month);
-                printf("Enter the year of the appointment:\n");
-                scanf("%d",&year);
-                printf("Enter the hour and the minute of the appointment:\n");
-                scanf("%d %d",&startHour,&startMin);
-                printf("Enter the duration of the appointment (h min):\n");
-                scanf("%d %d",&durationHour,&durationMin);
-                printf("New Appointment Add:\n");
-                addAppointment(list->head[0],day,month,year,startHour,startMin,durationHour,durationMin,purpose);
-            case 4: // Elle marche mais faut faire en sorte qu'elle propose le contact parce que la je lui fait pour la tete et le premier rendez vous
-                deleteAppointment(list->head[0],0);
-                break;
-            case 5:  // pareil
-                printContactAppointments(list->head[0]);
-                break;
-            case 6:
-                printf("Exiting...\n");
-                break;
-
-            default:
-                printf("Invalid choice. Please enter a valid option.\n");
-                break;
+    int n =14;
+    int taille = pow(2, n) - 1;
+    int count = 2;
+    int array[100000] = {0};
+    for (int i = 1; i < pow(2, n); i++) {
+        array[i] = 1;
+    }
+    while (count < pow(2, n)) {
+        for (int i = 1; i < pow(2, n); i++) {
+            if (i % count == 0) {
+                array[i] += 1;
+            }
         }
-    } while (choice != 6);
+        count = count * 2;
+    }
+    t_d_list *list = create_list(n);
+    for (int i = 1; i < pow(2, n); i++) {
+        t_d_cell *cell = create_cell(i, array[i]);
+        insert_cell_sorted(list, cell);
+    }
+
+    startTimer();
+    int valueToSearch = 489; // Replace with the value you want to search for
+    for (int i = 0;i<1000000;i++){
+        search_list(list, rand() % (int)pow(2,n));
+    }
+    stopTimer();
+    printf("Execution Time for search_list: ");
+    displayTime(); // Display the time taken by the search_list function
+    startTimer();
+    for (int i = 0;i<100000;i++){
+        search_level_zero(list, rand() % (int)pow(2,n));
+    }
+    stopTimer();
+    printf("Execution Time for search_list zero: ");
+    displayTime(); // Display the time taken by the search_list function
     return 0;
 }
+
